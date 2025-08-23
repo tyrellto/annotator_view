@@ -1,0 +1,80 @@
+,map,description
+0,abagen-genepc1-fsaverage-10k,PC1 of genes in the Allen Human Brain Atlas
+1,aghourian2017-feobv-MNI152-1mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter)
+2,alarkurtti2015-raclopride-MNI152-3mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
+3,bedard2019-feobv-MNI152-1mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter)
+4,beliveau2017-az10419369-MNI152-1mm,PET tracer binding (Bmax) to 5-HT1b (serotonin receptor)
+5,beliveau2017-az10419369-fsaverage-164k,PET tracer binding (Bmax) to 5-HT1b (serotonin receptor)
+6,beliveau2017-cimbi36-MNI152-1mm,PET tracer binding (Bmax) to 5-HT2a (serotonin receptor)
+7,beliveau2017-cimbi36-fsaverage-164k,PET tracer binding (Bmax) to 5-HT2a (serotonin receptor)
+8,beliveau2017-cumi101-MNI152-1mm,PET tracer binding (Bmax) to 5-HT1a (serotonin receptor)
+9,beliveau2017-cumi101-fsaverage-164k,PET tracer binding (Bmax) to 5-HT1a (serotonin receptor)
+10,beliveau2017-dasb-MNI152-1mm,PET tracer binding (Bmax) to 5-HTT (serotonin transporter)
+11,beliveau2017-dasb-fsaverage-164k,PET tracer binding (Bmax) to 5-HTT (serotonin transporter)
+12,beliveau2017-sb207145-MNI152-1mm,PET tracer binding (Bmax) to 5-HT4 (serotonin receptor)
+13,beliveau2017-sb207145-fsaverage-164k,PET tracer binding (Bmax) to 5-HT4 (serotonin receptor)
+15,ding2010-mrb-MNI152-1mm,PET tracer binding (BPnd) to NET (norepinephrine transporter)
+16,dubois2015-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor)
+17,dukart2018-flumazenil-MNI152-3mm,PET tracer binding (BPnd) to GABAa (gaba receptor)
+18,dukart2018-fpcit-MNI152-3mm,SPECT tracer binding (SUVR) to DAT (dopamine transporter)
+19,fazio2016-madam-MNI152-3mm,PET tracer binding (BPnd) to 5-HTT (serotonin transporter)
+20,finnema2016-ucbj-MNI152-1mm,"PET tracer binding (BPnd) to SV2A (synaptic vesicle glycoprotein 2A, a synapse marker)"
+21,gallezot2010-p943-MNI152-1mm,PET tracer binding (BPnd) to 5-HT1b (serotonin receptor)
+22,gallezot2017-gsk189254-MNI152-1mm,PET tracer binding (Vt) to H3 (histamine receptor)
+24,hcps1200-megalpha-fsLR-4k,MEG alpha (8-12 Hz) power distribution from the Human Connectome Project S1200 release
+25,hcps1200-megbeta-fsLR-4k,MEG beta (15-29 Hz) power distribution from the Human Connectome Project S1200 release
+26,hcps1200-megdelta-fsLR-4k,MEG delta (2-4 Hz) power distribution from the Human Connectome Project S1200 release
+27,hcps1200-meggamma1-fsLR-4k,MEG low gamma (30-59 Hz) power distribution from the Human Connectome Project S1200 release
+28,hcps1200-meggamma2-fsLR-4k,MEG high gamma (60-90 Hz) power distribution from the Human Connectome Project S1200 release
+29,hcps1200-megtheta-fsLR-4k,MEG theta (5-7 Hz) power distribution from the Human Connectome Project S1200 release
+30,hcps1200-megtimescale-fsLR-4k,MEG intrinsic timescale from the Human Connectome Project S1200 release
+31,hcps1200-myelinmap-fsLR-32k,MRI T1w/T2w ratio from the Human Connectome Project S1200 release
+32,hcps1200-thickness-fsLR-32k,MRI cortical thickness from the Human Connectome Project S1200 release
+33,hesse2017-methylreboxetine-MNI152-3mm,PET tracer binding (BPnd) to NET (norepinephrine transporter)
+34,hill2010-devexp-fsLR-164k,Developmental cortical expansion
+35,hill2010-evoexp-fsLR-164k,Evolutionary cortical expansion
+36,hillmer2016-flubatine-MNI152-1mm,PET tracer binding (Vt) to a4b2 (acetylcholine receptor)
+37,jaworska2020-fallypride-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
+38,kaller2017-sch23390-MNI152-3mm,PET tracer binding (BPnd) to D1 (dopamine receptor)
+39,kantonen2020-carfentanil-MNI152-3mm,PET tracer binding (BPnd) to MOR (mu-opioid receptor)
+41,laurikainen2018-fmpepd2-MNI152-1mm,PET tracer binding (Vt) to CB1 (cannabinoid receptor)
+45,margulies2016-fcgradient01-fsLR-32k,Diffusion map embedding gradient 1 of group-averaged functional connectivity
+46,margulies2016-fcgradient02-fsLR-32k,Diffusion map embedding gradient 2 of group-averaged functional connectivity
+47,margulies2016-fcgradient03-fsLR-32k,Diffusion map embedding gradient 3 of group-averaged functional connectivity
+48,margulies2016-fcgradient04-fsLR-32k,Diffusion map embedding gradient 4 of group-averaged functional connectivity
+49,margulies2016-fcgradient05-fsLR-32k,Diffusion map embedding gradient 5 of group-averaged functional connectivity
+50,margulies2016-fcgradient06-fsLR-32k,Diffusion map embedding gradient 6 of group-averaged functional connectivity
+51,margulies2016-fcgradient07-fsLR-32k,Diffusion map embedding gradient 7 of group-averaged functional connectivity
+52,margulies2016-fcgradient08-fsLR-32k,Diffusion map embedding gradient 8 of group-averaged functional connectivity
+53,margulies2016-fcgradient09-fsLR-32k,Diffusion map embedding gradient 9 of group-averaged functional connectivity
+54,margulies2016-fcgradient10-fsLR-32k,Diffusion map embedding gradient 10 of group-averaged functional connectivity
+55,mueller2013-intersubjvar-fsLR-164k,Intersubject variability of resting-state functional connectivity.
+56,naganawa2020-lsn3172176-MNI152-1mm,PET tracer binding (BPnd) to M1 (acetylcholine receptor)
+57,neurosynth-cogpc1-MNI152-2mm,PC1 of Neurosynth terms in the Cognitive Atlas (123 terms total)
+58,norgaard2021-flumazenil-MNI152-1mm,PET and autoradiography informed GABAa benzodiazepine binding-site density (Bmax; gaba receptor)
+59,norgaard2021-flumazenil-fsaverage-164k,PET and autoradiography informed GABAa benzodiazepine binding-site density (Bmax; gaba receptor)
+60,normandin2015-omar-MNI152-1mm,PET tracer binding (Vt) to CB1 (cannabinoid receptor)
+61,radnakrishnan2018-gsk215083-MNI152-1mm,PET tracer binding (BPnd) to 5-HT6 (serotonin receptor)
+62,raichle-cbf-fsLR-164k,Cerebral blood flow
+63,raichle-cbv-fsLR-164k,Cerebral blood volume
+64,raichle-cmr02-fsLR-164k,Oxygen metabolism
+65,raichle-cmrglc-fsLR-164k,Glucose metabolism
+66,reardon2018-scalinghcp-civet-41k,Cortical areal scaling during development from the HCP dataset (S1200 release)
+67,reardon2018-scalingnih-civet-41k,Cortical areal scaling during development from the NIH dataset
+68,reardon2018-scalingpnc-civet-41k,Cortical areal scaling during development from the PNC dataset
+69,rosaneto-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor)
+70,sandiego2015-flb457-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
+71,sasaki2012-fepe2i-MNI152-1mm,PET tracer binding (BPnd) to DAT (dopamine transporter)
+72,satterthwaite2014-meancbf-MNI152-1mm,Cerebral blood flow
+73,savli2012-altanserin-MNI152-3mm,PET tracer binding (BPnd) to 5-HT2a (serotonin receptor)
+74,savli2012-dasb-MNI152-3mm,PET tracer binding (BPnd) to 5-HTT (serotonin transporter)
+75,savli2012-p943-MNI152-3mm,PET tracer binding (BPnd) to 5-HT1b (serotonin receptor)
+76,savli2012-way100635-MNI152-3mm,PET tracer binding (BPnd) to 5-HT1a (serotonin receptor)
+77,smart2019-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor)
+78,smith2017-flb457-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
+80,sydnor2021-SAaxis-fsLR-32k,Sensory-association mean rank axis
+81,tuominen-feobv-MNI152-2mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter)
+82,turtonen2020-carfentanil-MNI152-1mm,PET tracer binding (BPnd) to MOR (mu-opioid receptor)
+83,vijay2018-ly2795050-MNI152-2mm,PET tracer binding (Vt) to KOR (kappa-opioid receptor)
+85,xu2020-FChomology-fsLR-32k,Cross-species functional homology
+86,xu2020-evoexp-fsLR-32k,Evolutionary cortical expansion
