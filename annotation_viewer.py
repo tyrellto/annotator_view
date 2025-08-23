@@ -222,7 +222,7 @@ except NameError:
     ROOT = Path.cwd()
 
 IMG_DIR  = (ROOT / "images").resolve()
-CSV_FILE = (ROOT / "metadata.csv").resolve()
+CSV_FILE = (ROOT / "metadata_v2.csv").resolve()
 
 # ─── config ───────────────────────────────────────────────────────────────────
 EXTS = {".png",".jpg",".jpeg",".webp",".bmp",".gif",".tif",".tiff",".svg"}
@@ -253,7 +253,7 @@ def is_url(s: str) -> bool:
 def show_img(src):
     """Use a backward-compatible image call across Streamlit versions."""
     try:
-        st.image(str(src), use_column_width=True)
+        st.image(str(src), use_container_width=True)
     except TypeError:
         st.image(str(src))
 
@@ -509,7 +509,7 @@ def render_pane(pane_name: str, idx_key: str):
         )
         st.markdown("**Papers:**\n\n")
         st.markdown(papers_md)
-        
+
     if src is None:
         st.error("image not found")
         if DEBUG:
