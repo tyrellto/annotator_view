@@ -147,7 +147,7 @@ def render_pane(pane_name: str, idx_key: str):
             with st.expander("Why not found? (debug)"):
                 st.code(diag, language="json")
     else:
-        st.image(str(src), use_column_width=True)
+        st.image(str(src), use_container_width=True)
 
     st.caption(f"Current flag: {st.session_state['flags'].get(map_id, '—')}")
 
