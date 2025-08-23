@@ -1,80 +1,80 @@
-,map,description
-0,abagen-genepc1-fsaverage-10k,PC1 of genes in the Allen Human Brain Atlas
-1,aghourian2017-feobv-MNI152-1mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter)
-2,alarkurtti2015-raclopride-MNI152-3mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
-3,bedard2019-feobv-MNI152-1mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter)
-4,beliveau2017-az10419369-MNI152-1mm,PET tracer binding (Bmax) to 5-HT1b (serotonin receptor)
-5,beliveau2017-az10419369-fsaverage-164k,PET tracer binding (Bmax) to 5-HT1b (serotonin receptor)
-6,beliveau2017-cimbi36-MNI152-1mm,PET tracer binding (Bmax) to 5-HT2a (serotonin receptor)
-7,beliveau2017-cimbi36-fsaverage-164k,PET tracer binding (Bmax) to 5-HT2a (serotonin receptor)
-8,beliveau2017-cumi101-MNI152-1mm,PET tracer binding (Bmax) to 5-HT1a (serotonin receptor)
-9,beliveau2017-cumi101-fsaverage-164k,PET tracer binding (Bmax) to 5-HT1a (serotonin receptor)
-10,beliveau2017-dasb-MNI152-1mm,PET tracer binding (Bmax) to 5-HTT (serotonin transporter)
-11,beliveau2017-dasb-fsaverage-164k,PET tracer binding (Bmax) to 5-HTT (serotonin transporter)
-12,beliveau2017-sb207145-MNI152-1mm,PET tracer binding (Bmax) to 5-HT4 (serotonin receptor)
-13,beliveau2017-sb207145-fsaverage-164k,PET tracer binding (Bmax) to 5-HT4 (serotonin receptor)
-15,ding2010-mrb-MNI152-1mm,PET tracer binding (BPnd) to NET (norepinephrine transporter)
-16,dubois2015-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor)
-17,dukart2018-flumazenil-MNI152-3mm,PET tracer binding (BPnd) to GABAa (gaba receptor)
-18,dukart2018-fpcit-MNI152-3mm,SPECT tracer binding (SUVR) to DAT (dopamine transporter)
-19,fazio2016-madam-MNI152-3mm,PET tracer binding (BPnd) to 5-HTT (serotonin transporter)
-20,finnema2016-ucbj-MNI152-1mm,"PET tracer binding (BPnd) to SV2A (synaptic vesicle glycoprotein 2A, a synapse marker)"
-21,gallezot2010-p943-MNI152-1mm,PET tracer binding (BPnd) to 5-HT1b (serotonin receptor)
-22,gallezot2017-gsk189254-MNI152-1mm,PET tracer binding (Vt) to H3 (histamine receptor)
-24,hcps1200-megalpha-fsLR-4k,MEG alpha (8-12 Hz) power distribution from the Human Connectome Project S1200 release
-25,hcps1200-megbeta-fsLR-4k,MEG beta (15-29 Hz) power distribution from the Human Connectome Project S1200 release
-26,hcps1200-megdelta-fsLR-4k,MEG delta (2-4 Hz) power distribution from the Human Connectome Project S1200 release
-27,hcps1200-meggamma1-fsLR-4k,MEG low gamma (30-59 Hz) power distribution from the Human Connectome Project S1200 release
-28,hcps1200-meggamma2-fsLR-4k,MEG high gamma (60-90 Hz) power distribution from the Human Connectome Project S1200 release
-29,hcps1200-megtheta-fsLR-4k,MEG theta (5-7 Hz) power distribution from the Human Connectome Project S1200 release
-30,hcps1200-megtimescale-fsLR-4k,MEG intrinsic timescale from the Human Connectome Project S1200 release
-31,hcps1200-myelinmap-fsLR-32k,MRI T1w/T2w ratio from the Human Connectome Project S1200 release
-32,hcps1200-thickness-fsLR-32k,MRI cortical thickness from the Human Connectome Project S1200 release
-33,hesse2017-methylreboxetine-MNI152-3mm,PET tracer binding (BPnd) to NET (norepinephrine transporter)
-34,hill2010-devexp-fsLR-164k,Developmental cortical expansion
-35,hill2010-evoexp-fsLR-164k,Evolutionary cortical expansion
-36,hillmer2016-flubatine-MNI152-1mm,PET tracer binding (Vt) to a4b2 (acetylcholine receptor)
-37,jaworska2020-fallypride-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
-38,kaller2017-sch23390-MNI152-3mm,PET tracer binding (BPnd) to D1 (dopamine receptor)
-39,kantonen2020-carfentanil-MNI152-3mm,PET tracer binding (BPnd) to MOR (mu-opioid receptor)
-41,laurikainen2018-fmpepd2-MNI152-1mm,PET tracer binding (Vt) to CB1 (cannabinoid receptor)
-45,margulies2016-fcgradient01-fsLR-32k,Diffusion map embedding gradient 1 of group-averaged functional connectivity
-46,margulies2016-fcgradient02-fsLR-32k,Diffusion map embedding gradient 2 of group-averaged functional connectivity
-47,margulies2016-fcgradient03-fsLR-32k,Diffusion map embedding gradient 3 of group-averaged functional connectivity
-48,margulies2016-fcgradient04-fsLR-32k,Diffusion map embedding gradient 4 of group-averaged functional connectivity
-49,margulies2016-fcgradient05-fsLR-32k,Diffusion map embedding gradient 5 of group-averaged functional connectivity
-50,margulies2016-fcgradient06-fsLR-32k,Diffusion map embedding gradient 6 of group-averaged functional connectivity
-51,margulies2016-fcgradient07-fsLR-32k,Diffusion map embedding gradient 7 of group-averaged functional connectivity
-52,margulies2016-fcgradient08-fsLR-32k,Diffusion map embedding gradient 8 of group-averaged functional connectivity
-53,margulies2016-fcgradient09-fsLR-32k,Diffusion map embedding gradient 9 of group-averaged functional connectivity
-54,margulies2016-fcgradient10-fsLR-32k,Diffusion map embedding gradient 10 of group-averaged functional connectivity
-55,mueller2013-intersubjvar-fsLR-164k,Intersubject variability of resting-state functional connectivity.
-56,naganawa2020-lsn3172176-MNI152-1mm,PET tracer binding (BPnd) to M1 (acetylcholine receptor)
-57,neurosynth-cogpc1-MNI152-2mm,PC1 of Neurosynth terms in the Cognitive Atlas (123 terms total)
-58,norgaard2021-flumazenil-MNI152-1mm,PET and autoradiography informed GABAa benzodiazepine binding-site density (Bmax; gaba receptor)
-59,norgaard2021-flumazenil-fsaverage-164k,PET and autoradiography informed GABAa benzodiazepine binding-site density (Bmax; gaba receptor)
-60,normandin2015-omar-MNI152-1mm,PET tracer binding (Vt) to CB1 (cannabinoid receptor)
-61,radnakrishnan2018-gsk215083-MNI152-1mm,PET tracer binding (BPnd) to 5-HT6 (serotonin receptor)
-62,raichle-cbf-fsLR-164k,Cerebral blood flow
-63,raichle-cbv-fsLR-164k,Cerebral blood volume
-64,raichle-cmr02-fsLR-164k,Oxygen metabolism
-65,raichle-cmrglc-fsLR-164k,Glucose metabolism
-66,reardon2018-scalinghcp-civet-41k,Cortical areal scaling during development from the HCP dataset (S1200 release)
-67,reardon2018-scalingnih-civet-41k,Cortical areal scaling during development from the NIH dataset
-68,reardon2018-scalingpnc-civet-41k,Cortical areal scaling during development from the PNC dataset
-69,rosaneto-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor)
-70,sandiego2015-flb457-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
-71,sasaki2012-fepe2i-MNI152-1mm,PET tracer binding (BPnd) to DAT (dopamine transporter)
-72,satterthwaite2014-meancbf-MNI152-1mm,Cerebral blood flow
-73,savli2012-altanserin-MNI152-3mm,PET tracer binding (BPnd) to 5-HT2a (serotonin receptor)
-74,savli2012-dasb-MNI152-3mm,PET tracer binding (BPnd) to 5-HTT (serotonin transporter)
-75,savli2012-p943-MNI152-3mm,PET tracer binding (BPnd) to 5-HT1b (serotonin receptor)
-76,savli2012-way100635-MNI152-3mm,PET tracer binding (BPnd) to 5-HT1a (serotonin receptor)
-77,smart2019-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor)
-78,smith2017-flb457-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor)
-80,sydnor2021-SAaxis-fsLR-32k,Sensory-association mean rank axis
-81,tuominen-feobv-MNI152-2mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter)
-82,turtonen2020-carfentanil-MNI152-1mm,PET tracer binding (BPnd) to MOR (mu-opioid receptor)
-83,vijay2018-ly2795050-MNI152-2mm,PET tracer binding (Vt) to KOR (kappa-opioid receptor)
-85,xu2020-FChomology-fsLR-32k,Cross-species functional homology
-86,xu2020-evoexp-fsLR-32k,Evolutionary cortical expansion
+,map,description,demographics,N,age,tags,Paper1,Paper2
+0,abagen-genepc1-fsaverage-10k,PC1 of genes in the Allen Human Brain Atlas,"N = 6, Age = 24-55",6.0,24-55,genetics,https://pmc.ncbi.nlm.nih.gov/articles/PMC4243026/,https://pmc.ncbi.nlm.nih.gov/articles/PMC8660024/
+1,aghourian2017-feobv-MNI152-1mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter),"N = 18, Age = 66.8 +/- 6.8",18.0,66.8 +/- 6.8,receptors; PET,https://www.researchgate.net/publication/319645928_Quantification_of_brain_cholinergic_denervation_in_Alzheimer%27s_disease_using_PET_imaging_with_18F-FEOBV,https://www.nature.com/articles/s41593-022-01186-3
+2,alarkurtti2015-raclopride-MNI152-3mm,PET tracer binding (BPnd) to D2 (dopamine receptor),"N = 7, Age = 24 +/- 2",7.0,24 +/- 2,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC4640276/,
+3,bedard2019-feobv-MNI152-1mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter),"N = 5, Age = 68.3 +/- 3.1",5.0,68.3 +/- 3.1,receptors; PET,https://www.sciencedirect.com/science/article/pii/S138994571830618X?via%3Dihub,https://www.nature.com/articles/s41593-022-01186-3
+4,beliveau2017-az10419369-MNI152-1mm,PET tracer binding (Bmax) to 5-HT1b (serotonin receptor),"N = 36, Age = 27.8 +/- 6.9",36.0,27.8 +/- 6.9,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+5,beliveau2017-az10419369-fsaverage-164k,PET tracer binding (Bmax) to 5-HT1b (serotonin receptor),"N = 36, Age = 27.8 +/- 6.9",36.0,27.8 +/- 6.9,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+6,beliveau2017-cimbi36-MNI152-1mm,PET tracer binding (Bmax) to 5-HT2a (serotonin receptor),"N = 29, Age = 22.6 +/- 2.7",29.0,22.6 +/- 2.7,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+7,beliveau2017-cimbi36-fsaverage-164k,PET tracer binding (Bmax) to 5-HT2a (serotonin receptor),"N = 29, Age = 22.6 +/- 2.7",29.0,22.6 +/- 2.7,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+8,beliveau2017-cumi101-MNI152-1mm,PET tracer binding (Bmax) to 5-HT1a (serotonin receptor),"N = 8, Age = 28.4 +/- 8.8",8.0,28.4 +/- 8.8,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+9,beliveau2017-cumi101-fsaverage-164k,PET tracer binding (Bmax) to 5-HT1a (serotonin receptor),"N = 8, Age = 28.4 +/- 8.8",8.0,28.4 +/- 8.8,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+10,beliveau2017-dasb-MNI152-1mm,PET tracer binding (Bmax) to 5-HTT (serotonin transporter),"N = 100, Age = 25.1 +/- 5.8",100.0,25.1 +/- 5.8,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+11,beliveau2017-dasb-fsaverage-164k,PET tracer binding (Bmax) to 5-HTT (serotonin transporter),"N = 100, Age = 25.1 +/- 5.8",100.0,25.1 +/- 5.8,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+12,beliveau2017-sb207145-MNI152-1mm,PET tracer binding (Bmax) to 5-HT4 (serotonin receptor),"N = 59, Age = 25.9 +/- 5.3",59.0,25.9 +/- 5.3,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+13,beliveau2017-sb207145-fsaverage-164k,PET tracer binding (Bmax) to 5-HT4 (serotonin receptor),"N = 59, Age = 25.9 +/- 5.3",59.0,25.9 +/- 5.3,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5214625/,
+15,ding2010-mrb-MNI152-1mm,PET tracer binding (BPnd) to NET (norepinephrine transporter),"N = 77, Age = 33.4 +/- 9.17",77.0,33.4 +/- 9.17,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC3727644/,https://www.nature.com/articles/s41593-022-01186-3
+16,dubois2015-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor),"N = 28, Age = 33.1 +/- 11.2",28.0,33.1 +/- 11.2,receptors; PET,https://www.researchgate.net/publication/281149514_Characterization_of_agesex_and_the_regional_distribution_of_mGluR5_availability_in_the_healthy_human_brain_measured_by_high-resolution_CABP688_PET,https://www.nature.com/articles/s41593-022-01186-3
+17,dukart2018-flumazenil-MNI152-3mm,PET tracer binding (BPnd) to GABAa (gaba receptor),"N = 6, Age = 43 +/- 4",6.0,43 +/- 4,receptors; PET,https://www.nature.com/articles/s41598-018-22444-0,
+18,dukart2018-fpcit-MNI152-3mm,SPECT tracer binding (SUVR) to DAT (dopamine transporter),"N = 174, Age = 61 +/- 11",174.0,61 +/- 11,receptors; PET,https://www.nature.com/articles/s41598-018-22444-0,
+19,fazio2016-madam-MNI152-3mm,PET tracer binding (BPnd) to 5-HTT (serotonin transporter),"N = 10, Age = 51-67",10.0,51-67,receptors; PET,https://www.sciencedirect.com/science/article/pii/S1053811916002172?via%3Dihub,
+20,finnema2016-ucbj-MNI152-1mm,"PET tracer binding (BPnd) to SV2A (synaptic vesicle glycoprotein 2A, a synapse marker)","N = 76, Age = 48.9 +/- 18.4",76.0,48.9 +/- 18.4,PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC6259313/,https://pmc.ncbi.nlm.nih.gov/articles/PMC6233853/
+21,gallezot2010-p943-MNI152-1mm,PET tracer binding (BPnd) to 5-HT1b (serotonin receptor),"N = 23, Age = 28.7 +/- 7",23.0,28.7 +/- 7,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC2949107/,https://www.nature.com/articles/s41593-022-01186-3
+22,gallezot2017-gsk189254-MNI152-1mm,PET tracer binding (Vt) to H3 (histamine receptor),"N = 8, Age = 31.69 +/- 8.95",8.0,31.69 +/- 8.95,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC2949107/,https://www.nature.com/articles/s41593-022-01186-3
+24,hcps1200-megalpha-fsLR-4k,MEG alpha (8-12 Hz) power distribution from the Human Connectome Project S1200 release,"N = 33, Age = 22-35",33.0,22-35,functional; MEG,,
+25,hcps1200-megbeta-fsLR-4k,MEG beta (15-29 Hz) power distribution from the Human Connectome Project S1200 release,"N = 33, Age = 22-35",33.0,22-35,functional; MEG,,
+26,hcps1200-megdelta-fsLR-4k,MEG delta (2-4 Hz) power distribution from the Human Connectome Project S1200 release,"N = 33, Age = 22-35",33.0,22-35,functional; MEG,,
+27,hcps1200-meggamma1-fsLR-4k,MEG low gamma (30-59 Hz) power distribution from the Human Connectome Project S1200 release,"N = 33, Age = 22-35",33.0,22-35,functional; MEG,,
+28,hcps1200-meggamma2-fsLR-4k,MEG high gamma (60-90 Hz) power distribution from the Human Connectome Project S1200 release,"N = 33, Age = 22-35",33.0,22-35,functional; MEG,,
+29,hcps1200-megtheta-fsLR-4k,MEG theta (5-7 Hz) power distribution from the Human Connectome Project S1200 release,"N = 33, Age = 22-35",33.0,22-35,functional; MEG,,
+30,hcps1200-megtimescale-fsLR-4k,MEG intrinsic timescale from the Human Connectome Project S1200 release,"N = 33, Age = 22-35",33.0,22-35,functional; MEG,,
+31,hcps1200-myelinmap-fsLR-32k,MRI T1w/T2w ratio from the Human Connectome Project S1200 release,"N = None, Age = 22-35",,22-35,structural; MRI,,
+32,hcps1200-thickness-fsLR-32k,MRI cortical thickness from the Human Connectome Project S1200 release,"N = None, Age = 22-35",,22-35,structural; MRI,,
+33,hesse2017-methylreboxetine-MNI152-3mm,PET tracer binding (BPnd) to NET (norepinephrine transporter),"N = 10, Age = 33.3 (mean)",10.0,33.3 (mean),receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5538358/,
+34,hill2010-devexp-fsLR-164k,Developmental cortical expansion,"N = None, Age = None",,None,structural; MRI,https://www.pnas.org/doi/10.1073/pnas.1001229107?url_ver=Z39.88-2003&rfr_id=ori%3Arid%3Acrossref.org&rfr_dat=cr_pub++0pubmed,
+35,hill2010-evoexp-fsLR-164k,Evolutionary cortical expansion,"N = None, Age = None",,None,structural; MRI,https://www.pnas.org/doi/10.1073/pnas.1001229107?url_ver=Z39.88-2003&rfr_id=ori%3Arid%3Acrossref.org&rfr_dat=cr_pub++0pubmed,
+36,hillmer2016-flubatine-MNI152-1mm,PET tracer binding (Vt) to a4b2 (acetylcholine receptor),"N = 30, Age = 33.50 +/- 10.71",30.0,33.50 +/- 10.71,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC5026941/,https://www.nature.com/articles/s41593-022-01186-3
+37,jaworska2020-fallypride-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor),"N = 49, Age = 18.41 +/- 0.57",49.0,18.41 +/- 0.57,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC7360619/,https://www.nature.com/articles/s41593-022-01186-3
+38,kaller2017-sch23390-MNI152-3mm,PET tracer binding (BPnd) to D1 (dopamine receptor),"N = 13, Age = 33 +/- 13",13.0,33 +/- 13,receptors; PET,https://www.researchgate.net/publication/313698580_Test-retest_measurements_of_dopamine_D1-type_receptors_using_simultaneous_PETMRI_imaging,
+39,kantonen2020-carfentanil-MNI152-3mm,PET tracer binding (BPnd) to MOR (mu-opioid receptor),"N = 204, Age = 32.3 +/- 10.8",204.0,32.3 +/- 10.8,receptors; PET,https://www.sciencedirect.com/science/article/pii/S1053811920304080?via%3Dihub,
+41,laurikainen2018-fmpepd2-MNI152-1mm,PET tracer binding (Vt) to CB1 (cannabinoid receptor),"N = 22, Age = 27.5 +/- 8.05",22.0,27.5 +/- 8.05,receptors; PET,https://www.sciencedirect.com/science/article/pii/S1053811918319724,
+45,margulies2016-fcgradient01-fsLR-32k,Diffusion map embedding gradient 1 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+46,margulies2016-fcgradient02-fsLR-32k,Diffusion map embedding gradient 2 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+47,margulies2016-fcgradient03-fsLR-32k,Diffusion map embedding gradient 3 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+48,margulies2016-fcgradient04-fsLR-32k,Diffusion map embedding gradient 4 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+49,margulies2016-fcgradient05-fsLR-32k,Diffusion map embedding gradient 5 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+50,margulies2016-fcgradient06-fsLR-32k,Diffusion map embedding gradient 6 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+51,margulies2016-fcgradient07-fsLR-32k,Diffusion map embedding gradient 7 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+52,margulies2016-fcgradient08-fsLR-32k,Diffusion map embedding gradient 8 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+53,margulies2016-fcgradient09-fsLR-32k,Diffusion map embedding gradient 9 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+54,margulies2016-fcgradient10-fsLR-32k,Diffusion map embedding gradient 10 of group-averaged functional connectivity,"N = 820, Age = None",820.0,None,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC5098630/,
+55,mueller2013-intersubjvar-fsLR-164k,Intersubject variability of resting-state functional connectivity.,"N = 25, Age = 51.8 +/- 6.99",25.0,51.8 +/- 6.99,functional; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC3746075/,
+56,naganawa2020-lsn3172176-MNI152-1mm,PET tracer binding (BPnd) to M1 (acetylcholine receptor),"N = 24, Age = 40.45 +/- 11.71",24.0,40.45 +/- 11.71,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC8049371/,https://www.nature.com/articles/s41593-022-01186-3
+57,neurosynth-cogpc1-MNI152-2mm,PC1 of Neurosynth terms in the Cognitive Atlas (123 terms total),"N = None, Age = None",,None,functional; structural; meta-analysis; MRI; fMRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC3146590/,
+58,norgaard2021-flumazenil-MNI152-1mm,PET and autoradiography informed GABAa benzodiazepine binding-site density (Bmax; gaba receptor),"N = 16, Age = 26.6 +/- 8",16.0,26.6 +/- 8,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC8256681/,
+59,norgaard2021-flumazenil-fsaverage-164k,PET and autoradiography informed GABAa benzodiazepine binding-site density (Bmax; gaba receptor),"N = 16, Age = 26.6 +/- 8",16.0,26.6 +/- 8,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC8256681/,
+60,normandin2015-omar-MNI152-1mm,PET tracer binding (Vt) to CB1 (cannabinoid receptor),"N = 77, Age = 30.01 +/- 8.87",77.0,30.01 +/- 8.87,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC4528005/,https://pmc.ncbi.nlm.nih.gov/articles/PMC4884543/
+61,radnakrishnan2018-gsk215083-MNI152-1mm,PET tracer binding (BPnd) to 5-HT6 (serotonin receptor),"N = 30, Age = 36.6 +/- 9.04",30.0,36.6 +/- 9.04,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC6126437/,https://www.sciencedirect.com/science/article/pii/S0925492719301441?via%3Dihub
+62,raichle-cbf-fsLR-164k,Cerebral blood flow,"N = 33, Age = 25.4 +/- 2.6",33.0,25.4 +/- 2.6,functional; PET; metabolism,https://pmc.ncbi.nlm.nih.gov/articles/PMC2955101/,
+63,raichle-cbv-fsLR-164k,Cerebral blood volume,"N = 33, Age = 25.4 +/- 2.6",33.0,25.4 +/- 2.6,functional; PET; metabolism,https://pmc.ncbi.nlm.nih.gov/articles/PMC2955101/,
+64,raichle-cmr02-fsLR-164k,Oxygen metabolism,"N = 33, Age = 25.4 +/- 2.6",33.0,25.4 +/- 2.6,functional; PET; metabolism,https://pmc.ncbi.nlm.nih.gov/articles/PMC2955101/,
+65,raichle-cmrglc-fsLR-164k,Glucose metabolism,"N = 33, Age = 25.4 +/- 2.6",33.0,25.4 +/- 2.6,functional; PET; metabolism,https://pmc.ncbi.nlm.nih.gov/articles/PMC2955101/,
+66,reardon2018-scalinghcp-civet-41k,Cortical areal scaling during development from the HCP dataset (S1200 release),"N = 1113, Age = None",1113.0,None,structural; MRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC7485526/,
+67,reardon2018-scalingnih-civet-41k,Cortical areal scaling during development from the NIH dataset,"N = 1531, Age =  5-25",1531.0,5-25,structural; MRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC7485526/,
+68,reardon2018-scalingpnc-civet-41k,Cortical areal scaling during development from the PNC dataset,"N = 1373, Age =  8-23",1373.0,8-23,structural; MRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC7485526/,
+69,rosaneto-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor),"N = 22, Age = 67.9 +/- 9.6",22.0,67.9 +/- 9.6,receptors; PET,https://www.nature.com/articles/s41593-022-01186-3,
+70,sandiego2015-flb457-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor),"N = 55, Age = 32.45 +/- 9.69",55.0,32.45 +/- 9.69,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC4420880/,https://www.nature.com/articles/s41593-022-01186-3
+71,sasaki2012-fepe2i-MNI152-1mm,PET tracer binding (BPnd) to DAT (dopamine transporter),"N = 6, Age = 31.06 +/- 7.7",6.0,31.06 +/- 7.7,receptors; PET,https://jnm.snmjournals.org/content/53/7/1065.long,
+72,satterthwaite2014-meancbf-MNI152-1mm,Cerebral blood flow,"N = 922, Age =  8-22",922.0,8-22,functional; ASL,https://pmc.ncbi.nlm.nih.gov/articles/PMC4060665/,
+73,savli2012-altanserin-MNI152-3mm,PET tracer binding (BPnd) to 5-HT2a (serotonin receptor),"N = 19, Age = 28.2 +/- 5.7",19.0,28.2 +/- 5.7,receptors; PET,https://www.sciencedirect.com/science/article/pii/S1053811912007021?via%3Dihub,
+74,savli2012-dasb-MNI152-3mm,PET tracer binding (BPnd) to 5-HTT (serotonin transporter),"N = 18, Age = 30.5 +/- 9.5",18.0,30.5 +/- 9.5,receptors; PET,https://www.sciencedirect.com/science/article/pii/S1053811912007021?via%3Dihub,
+75,savli2012-p943-MNI152-3mm,PET tracer binding (BPnd) to 5-HT1b (serotonin receptor),"N = 23, Age = 28.7 +/- 7",23.0,28.7 +/- 7,receptors; PET,https://www.sciencedirect.com/science/article/pii/S1053811912007021?via%3Dihub,
+76,savli2012-way100635-MNI152-3mm,PET tracer binding (BPnd) to 5-HT1a (serotonin receptor),"N = 35, Age = 26.3 +/- 5.2",35.0,26.3 +/- 5.2,receptors; PET,https://www.sciencedirect.com/science/article/pii/S1053811912007021?via%3Dihub,
+77,smart2019-abp688-MNI152-1mm,PET tracer binding (BPnd) to mGluR5 (glutamate receptor),"N = 73, Age = 19.9 +/- 3.04",73.0,19.9 +/- 3.04,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC6451701/,https://www.nature.com/articles/s41593-022-01186-3
+78,smith2017-flb457-MNI152-1mm,PET tracer binding (BPnd) to D2 (dopamine receptor),"N = 37, Age = 48.36 +/- 16.93",37.0,48.36 +/- 16.93,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC6498753/,
+80,sydnor2021-SAaxis-fsLR-32k,Sensory-association mean rank axis,"N = 3, Age = 66.6 +/- 0.94",3.0,66.6 +/- 0.94,MRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC8448958/,
+81,tuominen-feobv-MNI152-2mm,PET tracer binding (SUVR) to VAChT (acetylcholine transporter),"N = 4, Age = 37 +/- 10.2",4.0,37 +/- 10.2,receptors; PET,https://www.nature.com/articles/s41593-022-01186-3,https://pubmed.ncbi.nlm.nih.gov/32909238/
+82,turtonen2020-carfentanil-MNI152-1mm,PET tracer binding (BPnd) to MOR (mu-opioid receptor),"N = 39, Age = 39.38 +/- 5.05",39.0,39.38 +/- 5.05,receptors; PET,https://www.sciencedirect.com/science/article/pii/S2451902220303177?via%3Dihub,
+83,vijay2018-ly2795050-MNI152-2mm,PET tracer binding (Vt) to KOR (kappa-opioid receptor),"N = 28, Age = 33.5 +/- 11.3",28.0,33.5 +/- 11.3,receptors; PET,https://pmc.ncbi.nlm.nih.gov/articles/PMC6224533/,
+85,xu2020-FChomology-fsLR-32k,Cross-species functional homology,"N = None, Age = None",,None,functional; MRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC7871099/,
+86,xu2020-evoexp-fsLR-32k,Evolutionary cortical expansion,"N = None, Age = None",,None,structural; MRI,https://pmc.ncbi.nlm.nih.gov/articles/PMC7871099/,
