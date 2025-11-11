@@ -1,4 +1,4 @@
-# app.py — two-pane image flagger (fixed pixel dims + fixed-height meta card + comments)
+# app.py — two-pane image flagger (fixed-height panes, clean spacing, comments)
 # ─────────────────────────────────────────────────────────────────────────────
 import pandas as pd, streamlit as st
 from pathlib import Path
@@ -19,19 +19,17 @@ CSV_FILE = (ROOT / "metadata_v2.csv").resolve()
 EXTS = {".png",".jpg",".jpeg",".webp",".bmp",".gif",".tif",".tiff",".svg"}
 st.set_page_config(page_title="Image Flagger", layout="wide")
 
-# ─── killer CSS: zero top gap + fixed pane dims + fixed meta card ────────────
+# ─── minimal CSS: trim top padding; fixed-height pane with scrollable body ───
 st.markdown(
     """
     <style>
-    /* remove header/top padding space */
-    [data-testid="stHeader"] { height: 0px; }
+    /* tighten page padding a bit (don't nuke the header entirely) */
     [data-testid="stAppViewContainer"] > .main .block-container {
-        padding-top: 0rem; padding-bottom: 0rem;
+        padding-top: 0.5rem; padding-bottom: 0.5rem;
     }
 
-    /* fixed pane card */
+    /* pane: fixed total height, fills column width naturally */
     .pane {
-        width: var(--pane-w);
         height: var(--pane-h);
         display: flex;
         flex-direction: column;
@@ -39,34 +37,37 @@ st.markdown(
         border-radius: 10px;
         padding: 10px 12px;
         box-sizing: border-box;
-        background: var(--pane-bg, white);
-        margin: 0 auto; /* center within column */
+        background: white;
+        margin: 0; /* no extra outer gap */
     }
     .pane-header {
         font-weight: 700;
         font-size: 1.0rem;
         line-height: 1.2;
-        margin: 0 0 6px 0;
+        margin: 0 0 8px 0;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    /* fixed-height meta block: your example text fits without reflow */
-    .meta-card {
-        flex: 0 0 var(--meta-h);
+
+    /* metadata block (presentation-style) */
+    .meta {
         border: 1px solid rgba(0,0,0,.06);
         border-radius: 8px;
         padding: 8px 10px;
-        box-sizing: border-box;
-        overflow: auto;   /* scroll inside if long */
         background: rgba(0,0,0,0.02);
         margin-bottom: 8px;
     }
-    .meta-card .k { font-weight: 600; }
+    .meta .k { font-weight: 600; }
+
+    /* scrollable body (image + papers) */
     .pane-body {
         flex: 1 1 auto;
-        min-height: 0; /* required so overflow works in flex layouts */
-        overflow: auto;   /* scroll inside, not the whole page */
+        min-height: 0;           /* required for flex overflow */
+        overflow: auto;          /* scroll inside, shape stays fixed */
         padding-right: 4px;
     }
+    .pane-body img { max-width: 100%; height: auto; }
+
+    /* footer: comment + buttons + nav reserved in fixed space */
     .pane-footer {
         flex: 0 0 var(--footer-h);
         display: flex;
@@ -76,13 +77,10 @@ st.markdown(
     }
     .pane-footer .stButton > button { width: 100%; }
 
-    /* images: fit width and avoid blowing up height */
-    .pane-body img { max-width: 100%; height: auto; }
-
     /* keep links from stretching layout */
     .stMarkdown a { word-break: break-word; overflow-wrap: anywhere; }
 
-    /* tighten generic markdown spacing */
+    /* generally compact markdown spacing */
     .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown p { margin: 0.1rem 0; }
     .stMarkdown ul { margin: 0.15rem 0; }
     .stMarkdown li { margin: 0.05rem 0; }
@@ -91,26 +89,20 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ─── controls: fixed dims you can set exactly ────────────────────────────────
+# ─── sidebar controls: choose a large, fixed height ──────────────────────────
 with st.sidebar:
     AUTO_NEXT = st.checkbox("Auto-advance after marking", value=True)
     DEBUG     = st.checkbox("Debug resolver", value=False)
+    PANE_HEIGHT_PX  = st.number_input("Pane height (px)", min_value=600, max_value=2200, value=900, step=20)
+    FOOTER_HEIGHT_PX = st.number_input("Footer reserve (px)", min_value=140, max_value=360, value=210, step=10,
+                                       help="Space for comment + buttons + navigation")
 
-    PANE_WIDTH_PX  = st.number_input("Pane width (px)",  500, 2200, 900,  10)
-    PANE_HEIGHT_PX = st.number_input("Pane height (px)", 500, 2200, 900,  10)
-    META_HEIGHT_PX = st.number_input("Meta card height (px)", 120, 600, 180, 10,
-                                     help="Fixed space for Description/Demographics/N/Age/Tags block")
-    FOOTER_HEIGHT_PX = st.number_input("Footer height (px)", 120, 360, 210, 10,
-                                       help="Fixed space for comment + buttons + navigation")
-
-# Inject CSS custom properties (the “fixed shape” contract)
+# inject CSS variables for pane sizing
 st.markdown(
     f"""
     <style>
     :root {{
-        --pane-w: {int(PANE_WIDTH_PX)}px;
         --pane-h: {int(PANE_HEIGHT_PX)}px;
-        --meta-h: {int(META_HEIGHT_PX)}px;
         --footer-h: {int(FOOTER_HEIGHT_PX)}px;
     }}
     </style>
@@ -204,7 +196,7 @@ def resolve(raw: str):
     diag["suggestions"] = get_close_matches(key, keys, n=5, cutoff=0.6)
     return None, diag
 
-# ─── link parsing (fixed, 3.13-safe) ─────────────────────────────────────────
+# ─── link parsing (Python 3.13-safe) ─────────────────────────────────────────
 _URL_RE    = re.compile(r'(https?://[^\s\]\)>,;]+)', re.I)
 _DOI_RE    = re.compile(r'(?:doi:\s*|DOI:\s*)?(10\.\d{4,9}/[^\s\]\)>,;]+)')
 _ARXIV_RE  = re.compile(r'arxiv:\s*([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)', re.I)
@@ -286,25 +278,24 @@ def clear_flag(map_id: str):
 def save_comment(map_id: str, key: str):
     st.session_state["notes"][map_id] = st.session_state.get(key, "").strip()
 
-# ─── pane renderer (FIXED SHAPE) ─────────────────────────────────────────────
+# ─── pane renderer (fixed height, clean presentation) ────────────────────────
 def render_pane(pane_name: str, idx_key: str):
     i = int(st.session_state[idx_key]) % N
     row = df_meta.iloc[i]
     map_id = row["map"]
     src, diag = resolve(map_id)
 
-    # Pane
     st.markdown("<div class='pane'>", unsafe_allow_html=True)
     st.markdown(f"<div class='pane-header'>{pane_name}: <strong>{map_id}</strong></div>", unsafe_allow_html=True)
 
-    # --- fixed-height meta card (matches your presentation block) ---
+    # ——— presentation-style meta block ———
     desc = show_or_none(row.get("description", ""))
     demo = show_or_none(row.get("demographics", ""))
     n    = show_or_none(row.get("n", ""))
     age  = show_or_none(row.get("age", ""))
     tags = show_or_none(row.get("tags", ""))
 
-    st.markdown("<div class='meta-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='meta'>", unsafe_allow_html=True)
     st.markdown(f"<span class='k'>Description:</span> {desc}", unsafe_allow_html=True)
     st.markdown(f"<span class='k'>Demographics:</span> {demo}", unsafe_allow_html=True)
     st.markdown(f"<span class='k'>N:</span> {n}", unsafe_allow_html=True)
@@ -313,7 +304,7 @@ def render_pane(pane_name: str, idx_key: str):
     st.markdown("<span class='k'>Papers:</span>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- scrollable body: image + papers list ---
+    # ——— scrollable body: image + papers list ———
     st.markdown("<div class='pane-body'>", unsafe_allow_html=True)
     if src is None:
         st.error("image not found")
@@ -326,9 +317,9 @@ def render_pane(pane_name: str, idx_key: str):
     papers_md = links_markdown_list(row.get("paper1",""), row.get("paper2",""),
                                     label_style="url", numbered=True)
     st.markdown(papers_md)
-    st.markdown("</div>", unsafe_allow_html=True)  # end body
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- fixed footer: comment + buttons + nav ---
+    # ——— fixed footer: comment + buttons + nav ———
     st.markdown("<div class='pane-footer'>", unsafe_allow_html=True)
 
     ckey = f"{pane_name}_comment_{map_id}"
@@ -374,7 +365,7 @@ def render_pane(pane_name: str, idx_key: str):
     st.markdown("</div>", unsafe_allow_html=True)  # footer
     st.markdown("</div>", unsafe_allow_html=True)  # pane
 
-# ─── layout: two independent, fixed-size panes ───────────────────────────────
+# ─── layout: two equal columns; panes take full column width ─────────────────
 colA, colB = st.columns(2, gap="large")
 with colA:
     render_pane("Window A", "paneA_idx")
