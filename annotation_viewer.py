@@ -1,212 +1,3 @@
-# # app.py — two-pane image flagger (rock-solid, button-based, persistent by map)
-# # ─────────────────────────────────────────────────────────────────────────────
-# import pandas as pd, streamlit as st
-# from pathlib import Path
-# from difflib import get_close_matches
-# import unicodedata
-
-# # ─── paths ────────────────────────────────────────────────────────────────────
-# try:
-#     ROOT = Path(__file__).resolve().parent
-# except NameError:
-#     ROOT = Path.cwd()
-
-# IMG_DIR  = (ROOT / "images").resolve()
-# CSV_FILE = (ROOT / "metadata.csv").resolve()
-
-# # ─── config ───────────────────────────────────────────────────────────────────
-# EXTS = {".png",".jpg",".jpeg",".webp",".bmp",".gif",".tif",".tiff",".svg"}
-# st.set_page_config(page_title="Image Flagger", layout="wide")
-# with st.sidebar:
-#     AUTO_NEXT = st.checkbox("Auto-advance after marking", value=True)
-#     DEBUG     = st.checkbox("Debug resolver", value=False)
-
-# # ─── helpers: normalization + indexing ────────────────────────────────────────
-# def normkey(s: str) -> str:
-#     s = unicodedata.normalize("NFKC", str(s)).strip().strip('"').strip("'").lower()
-#     return "".join(ch for ch in s if ch.isalnum())
-
-# @st.cache_data(show_spinner=False)
-# def build_indexes(img_dir: Path):
-#     stem_index, name_index = {}, {}
-#     if not img_dir.exists():
-#         return stem_index, name_index
-#     for p in img_dir.rglob("*"):
-#         if p.is_file() and p.suffix.lower() in EXTS:
-#             stem_index.setdefault(normkey(p.stem), p)
-#             name_index.setdefault(normkey(p.name.rsplit(".",1)[0]), p)
-#     return stem_index, name_index
-
-# STEM_INDEX, NAME_INDEX = build_indexes(IMG_DIR)
-
-# @st.cache_data(show_spinner=False)
-# def meta(csv_path: Path):
-#     df = pd.read_csv(csv_path, dtype=str).fillna("")
-#     if "map" not in df.columns:
-#         raise ValueError("metadata.csv must contain a 'map' column")
-#     for col in ("description","paper"):
-#         if col not in df.columns: df[col] = ""
-#     return df
-
-# def resolve(raw: str):
-#     """Return (src, diag). src is str|Path|None."""
-#     diag = {"input": raw, "tried": []}
-#     if raw is None: return None, diag
-#     s = unicodedata.normalize("NFKC", str(raw)).strip().strip('"').strip("'")
-#     if not s: return None, diag
-#     # URL
-#     if s.startswith(("http://","https://","file://")):
-#         diag["result"] = "url"; return s, diag
-#     cand = Path(s)
-#     # absolute
-#     if cand.is_absolute() and cand.is_file():
-#         diag["result"] = "abs"; return cand, diag
-#     diag["tried"].append(f"abs:{cand}")
-#     # rel CWD
-#     if cand.is_file():
-#         diag["result"] = "rel_cwd"; return cand.resolve(), diag
-#     diag["tried"].append(f"rel_cwd:{cand}")
-#     # rel ROOT
-#     q = (ROOT / s)
-#     if q.is_file():
-#         diag["result"] = "rel_root"; return q.resolve(), diag
-#     diag["tried"].append(f"rel_root:{q}")
-#     # rel IMG_DIR
-#     q = (IMG_DIR / s)
-#     if q.is_file():
-#         diag["result"] = "rel_imgdir"; return q.resolve(), diag
-#     diag["tried"].append(f"rel_imgdir:{q}")
-#     # add ext
-#     if cand.suffix == "":
-#         for ext in EXTS:
-#             for base in (IMG_DIR, ROOT):
-#                 q = (base / (s + ext))
-#                 if q.is_file():
-#                     diag["result"] = f"added_ext:{ext}"; return q.resolve(), diag
-#                 diag["tried"].append(f"added_ext:{q}")
-#     # index lookup
-#     key = normkey(cand.stem if cand.suffix else s)
-#     if key in STEM_INDEX:
-#         diag["result"] = "stem_index"; diag["key"] = key; return STEM_INDEX[key], diag
-#     if key in NAME_INDEX:
-#         diag["result"] = "name_index"; diag["key"] = key; return NAME_INDEX[key], diag
-#     # fuzzy
-#     keys = list(STEM_INDEX.keys() | NAME_INDEX.keys())
-#     diag["suggestions"] = get_close_matches(key, keys, n=5, cutoff=0.6)
-#     return None, diag
-
-# # ─── load data ────────────────────────────────────────────────────────────────
-# df_meta = meta(CSV_FILE)
-# N = len(df_meta)
-# if N == 0:
-#     st.stop()
-
-# # guard against duplicate 'map' values
-# dup = df_meta["map"][df_meta["map"].duplicated()].tolist()
-# if dup:
-#     st.warning(f"Duplicate 'map' values found; using first occurrence: {sorted(set(dup))[:5]}{'...' if len(dup)>5 else ''}")
-
-# # fast lookups
-# idx_by_map = {}
-# for i, m in enumerate(df_meta["map"]):
-#     if m not in idx_by_map:
-#         idx_by_map[m] = i  # keep first
-
-# # ─── state: indices & flags persist across reruns ─────────────────────────────
-# st.session_state.setdefault("paneA_idx", 0)
-# st.session_state.setdefault("paneB_idx", 1 if N > 1 else 0)
-# st.session_state.setdefault("flags", {})  # map -> "OK"/"Bad"
-
-# # ─── actions (callbacks) ─────────────────────────────────────────────────────
-# def set_idx(idx_key: str, new_idx: int):
-#     st.session_state[idx_key] = int(new_idx) % N
-
-# def mark_and_maybe_advance(idx_key: str, i: int, map_id: str, flag: str, auto_next: bool):
-#     st.session_state["flags"][map_id] = flag
-#     if auto_next:
-#         st.session_state[idx_key] = (int(i) + 1) % N
-
-# def clear_flag(map_id: str):
-#     st.session_state["flags"].pop(map_id, None)
-
-# # ─── pane renderer ────────────────────────────────────────────────────────────
-# def render_pane(pane_name: str, idx_key: str):
-#     i = int(st.session_state[idx_key]) % N
-#     row = df_meta.iloc[i]
-#     map_id = row["map"]
-#     src, diag = resolve(map_id)
-
-#     st.markdown(f"### {pane_name}")
-#     st.write(f"**{map_id}**")
-#     if row["description"]: st.write(row["description"])
-#     if row["paper"]:       st.markdown(f"[paper link]({row['paper']})")
-
-#     if src is None:
-#         st.error("image not found")
-#         if DEBUG:
-#             with st.expander("Why not found? (debug)"):
-#                 st.code(diag, language="json")
-#     else:
-#         st.image(str(src), use_container_width=True)
-
-#     st.caption(f"Current flag: {st.session_state['flags'].get(map_id, '—')}")
-
-#     # buttons (stable keys per pane)
-#     b1, b2, b3, _sp = st.columns([1,1,1,4])
-#     with b1:
-#         st.button("✅ OK", key=f"{pane_name}_ok",
-#                   on_click=mark_and_maybe_advance,
-#                   args=(idx_key, i, map_id, "OK", AUTO_NEXT))
-#     with b2:
-#         st.button("❌ Bad", key=f"{pane_name}_bad",
-#                   on_click=mark_and_maybe_advance,
-#                   args=(idx_key, i, map_id, "Bad", AUTO_NEXT))
-#     with b3:
-#         st.button("🧹 Clear", key=f"{pane_name}_clear",
-#                   on_click=clear_flag, args=(map_id,))
-
-#     st.divider()
-
-#     # navigation (stable keys, callback changes index)
-#     c1, c2, c3 = st.columns([1,1,3])
-#     with c1:
-#         st.button("⬅ Prev", key=f"{pane_name}_prev",
-#                   on_click=set_idx, args=(idx_key, i-1))
-#     with c2:
-#         st.button("Next ➡", key=f"{pane_name}_next",
-#                   on_click=set_idx, args=(idx_key, i+1))
-#     with c3:
-#         jump_map = st.selectbox("Jump to map",
-#                                 options=df_meta["map"].tolist(),
-#                                 index=i,
-#                                 key=f"{pane_name}_jump_select")
-#         st.button("Go", key=f"{pane_name}_jump_go",
-#                   on_click=set_idx, args=(idx_key, idx_by_map.get(jump_map, i)))
-
-# # ─── layout: two independent panes ────────────────────────────────────────────
-# colA, colB = st.columns(2, gap="large")
-# with colA:
-#     render_pane("Window A", "paneA_idx")
-# with colB:
-#     render_pane("Window B", "paneB_idx")
-
-# # ─── annotations view/export (by map) ─────────────────────────────────────────
-# st.subheader("Your annotations")
-# annot_series = pd.Series(st.session_state["flags"], name="flag")
-# out = df_meta.merge(annot_series, how="left", left_on="map", right_index=True)
-# flagged = out[out["flag"].notna()].reset_index(drop=True)
-
-# st.progress(len(flagged) / max(N,1))
-# st.data_editor(flagged, num_rows="dynamic", use_container_width=True)
-# st.download_button("📥 Download CSV",
-#                    flagged.to_csv(index=False).encode(),
-#                    "annotations.csv", "text/csv")
-
-
-# app.py — two-pane image flagger (with richer metadata fields)
-# ─────────────────────────────────────────────────────────────────────────────
-
-
 # app.py — two-pane image flagger (with richer metadata + robust paper links)
 # ─────────────────────────────────────────────────────────────────────────────
 import pandas as pd, streamlit as st
@@ -227,11 +18,6 @@ CSV_FILE = (ROOT / "metadata_v2.csv").resolve()
 # ─── config ───────────────────────────────────────────────────────────────────
 EXTS = {".png",".jpg",".jpeg",".webp",".bmp",".gif",".tif",".tiff",".svg"}
 st.set_page_config(page_title="Image Flagger", layout="wide")
-# st.markdown(
-#     "<style>.stMarkdown a{word-break:break-word;overflow-wrap:anywhere}"
-#     ".stMarkdown ul{margin:0}.stMarkdown li{margin:0.15rem 0}</style>",
-#     unsafe_allow_html=True
-# )
 
 with st.sidebar:
     AUTO_NEXT = st.checkbox("Auto-advance after marking", value=True)
@@ -388,30 +174,6 @@ def parse_links_field(s: str) -> list[str]:
 
     return _dedup(links)
 
-def links_markdown(*fields: str, label_style: str = "domain") -> str:
-    """Turn any number of paper fields into a ' • '-joined Markdown link string.
-       label_style: "domain" (default) or "url" (show full URL as the label).
-    """
-    all_links = []
-    for f in fields:
-        all_links.extend(parse_links_field(f))
-    all_links = _dedup(all_links)
-
-    if not all_links:
-        return "None"
-
-    parts = []
-    for u in all_links:
-        if label_style == "url":
-            label = u
-        else:
-            try:
-                label = urlparse(u).netloc.replace("www.", "") or u
-            except Exception:
-                label = u
-        parts.append(f"[{label}]({u})")
-    return " • ".join(parts)
-
 def links_markdown_list(*fields: str, label_style: str = "url", numbered: bool = False) -> str:
     """Return a Markdown list with one link per line.
        label_style: "url" (full URL text) or "domain" (e.g., doi.org).
@@ -457,7 +219,8 @@ for i, m in enumerate(df_meta["map"]):
 # ─── state: indices & flags persist across reruns ─────────────────────────────
 st.session_state.setdefault("paneA_idx", 0)
 st.session_state.setdefault("paneB_idx", 1 if N > 1 else 0)
-st.session_state.setdefault("flags", {})  # map -> "OK"/"Bad"
+st.session_state.setdefault("flags", {})   # map -> "OK"/"Bad"
+st.session_state.setdefault("notes", {})   # map -> "comment" (optional text)
 
 # ─── actions (callbacks) ─────────────────────────────────────────────────────
 def set_idx(idx_key: str, new_idx: int):
@@ -470,6 +233,10 @@ def mark_and_maybe_advance(idx_key: str, i: int, map_id: str, flag: str, auto_ne
 
 def clear_flag(map_id: str):
     st.session_state["flags"].pop(map_id, None)
+
+def save_comment(map_id: str, key: str):
+    """Copy the current text_input value into the notes dict."""
+    st.session_state["notes"][map_id] = st.session_state.get(key, "").strip()
 
 # ─── pane renderer ────────────────────────────────────────────────────────────
 def render_pane(pane_name: str, idx_key: str):
@@ -488,14 +255,10 @@ def render_pane(pane_name: str, idx_key: str):
     age  = show_or_none(row.get("age", ""))
     tags = show_or_none(row.get("tags", ""))
 
-    # Papers: accept URLs, DOIs, arXiv, PMIDs, PMCID, multiple entries
-    # papers = links_markdown(row.get("paper1",""), row.get("paper2",""), row.get("paper",""))
-    # papers = links_markdown(row.get("paper1",""), row.get("paper2",""), row.get("paper",""), label_style="url")
-
     papers_md = links_markdown_list(
         row.get("paper1",""), row.get("paper2",""),
-        label_style="url",  # or "domain"
-        numbered=True      # set True for 1., 2., ...
+        label_style="url",
+        numbered=True
     )
 
     with bordered_container():
@@ -505,7 +268,6 @@ def render_pane(pane_name: str, idx_key: str):
             f"**N:** {n}  \n"
             f"**Age:** {age}  \n"
             f"**Tags:** {tags}  \n"
-            # f"**Papers:** {papers_md}"
         )
         st.markdown("**Papers:**\n\n")
         st.markdown(papers_md)
@@ -520,11 +282,21 @@ def render_pane(pane_name: str, idx_key: str):
 
     st.caption(f"Current flag: {st.session_state['flags'].get(map_id, '—')}")
 
-    # buttons (stable keys per pane) — wider columns + fill-width buttons
-    b1, b2, b3, _sp = st.columns([2, 2, 2, 6])  # was [1,1,1,4]; widen the first three
+    # Optional per-map comment input
+    ckey = f"{pane_name}_comment_{map_id}"
+    st.text_input(
+        "Comment (optional)",
+        value=st.session_state["notes"].get(map_id, ""),
+        key=ckey,
+        on_change=save_comment,
+        args=(map_id, ckey),
+        help="Add any brief note you want to export with this map."
+    )
+
+    # buttons (stable keys per pane)
+    b1, b2, b3, _sp = st.columns([2, 2, 2, 6])
 
     def wide_button(label, **kwargs):
-        # Use full column width if this Streamlit version supports it
         try:
             return st.button(label, use_container_width=True, **kwargs)
         except TypeError:
@@ -548,7 +320,7 @@ def render_pane(pane_name: str, idx_key: str):
 
     st.divider()
 
-    # navigation (stable keys, callback changes index)
+    # navigation
     c1, c2, c3 = st.columns([1,1,3])
     with c1:
         st.button("⬅ Prev", key=f"{pane_name}_prev",
@@ -573,12 +345,23 @@ with colB:
 
 # ─── annotations view/export (by map) ─────────────────────────────────────────
 st.subheader("Your annotations")
-annot_series = pd.Series(st.session_state["flags"], name="flag")
+
+annot_series   = pd.Series(st.session_state["flags"], name="flag")
+comment_series = pd.Series(st.session_state["notes"], name="comment")
+
 out = df_meta.merge(annot_series, how="left", left_on="map", right_index=True)
-flagged = out[out["flag"].notna()].reset_index(drop=True)
+out = out.merge(comment_series, how="left", left_on="map", right_index=True)
+
+# Include rows that have either a flag or a non-empty comment
+mask = out["flag"].notna() | out["comment"].fillna("").astype(str).str.len().gt(0)
+flagged = out[mask].reset_index(drop=True)
 
 st.progress(len(flagged) / max(N,1))
 st.data_editor(flagged, num_rows="dynamic", use_container_width=True)
-st.download_button("📥 Download CSV",
-                   flagged.to_csv(index=False).encode(),
-                   "annotations.csv", "text/csv")
+
+st.download_button(
+    "📥 Download CSV",
+    flagged.to_csv(index=False).encode(),
+    "annotations.csv",
+    "text/csv"
+)
