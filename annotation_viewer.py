@@ -182,12 +182,12 @@ def resolve(raw: str):
     diag["suggestions"] = get_close_matches(key, keys, n=5, cutoff=0.6)
     return None, diag
 
-# ─── robust link parsing for papers ───────────────────────────────────────────
-_URL_RE    = re.compile(r'(https?://[^\s\\]\\)>,;]+)', re.I)
-_DOI_RE    = re.compile(r'(?:doi:\\s*|DOI:\\s*)?(10\\.\\d{4,9}/[^\\s\\]\\)>,;]+)')
-_ARXIV_RE  = re.compile(r'arxiv:\\s*([0-9]{4}\\.[0-9]{4,5}(?:v\\d+)?)', re.I)
-_PMID_RE   = re.compile(r'pmid:\\s*(\\d+)', re.I)
-_PMCID_RE  = re.compile(r'pmcid:\\s*(PMC\\d+)', re.I)
+# --- robust link parsing for papers (Python 3.13-safe) ---
+_URL_RE    = re.compile(r'(https?://[^\s\]\)>,;]+)', re.I)
+_DOI_RE    = re.compile(r'(?:doi:\s*|DOI:\s*)?(10\.\d{4,9}/[^\s\]\)>,;]+)')
+_ARXIV_RE  = re.compile(r'arxiv:\s*([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)', re.I)
+_PMID_RE   = re.compile(r'pmid:\s*(\d+)', re.I)
+_PMCID_RE  = re.compile(r'pmcid:\s*(PMC\d+)', re.I)
 
 def _dedup(seq):
     seen, out = set(), []
@@ -195,6 +195,34 @@ def _dedup(seq):
         if x not in seen:
             seen.add(x); out.append(x)
     return out
+
+def parse_links_field(s: str) -> list[str]:
+    """Extract links from free text (URLs, DOIs, arXiv, PubMed/PMC)."""
+    if not s:
+        return []
+    text = str(s)
+
+    links = []
+    # 1) Explicit URLs
+    for m in _URL_RE.findall(text):
+        links.append(m.rstrip(').,;]'))
+
+    # 2) DOIs (with/without 'doi:')
+    for m in _DOI_RE.findall(text):
+        links.append(f"https://doi.org/{m}")
+
+    # 3) arXiv IDs
+    for m in _ARXIV_RE.findall(text):
+        links.append(f"https://arxiv.org/abs/{m}")
+
+    # 4) PubMed / PMC IDs
+    for m in _PMID_RE.findall(text):
+        links.append(f"https://pubmed.ncbi.nlm.nih.gov/{m}/")
+    for m in _PMCID_RE.findall(text):
+        links.append(f"https://www.ncbi.nlm.nih.gov/pmc/articles/{m}/")
+
+    return _dedup(links)
+
 
 def parse_links_field(s: str) -> list[str]:
     if not s: return []
