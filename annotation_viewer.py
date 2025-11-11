@@ -1,4 +1,4 @@
-# app.py — two-pane image flagger (fixed-height panes, clean spacing, comments)
+# app.py — two-pane image flagger (fixed-size presentation meta window + comments)
 # ─────────────────────────────────────────────────────────────────────────────
 import pandas as pd, streamlit as st
 from pathlib import Path
@@ -19,96 +19,43 @@ CSV_FILE = (ROOT / "metadata_v2.csv").resolve()
 EXTS = {".png",".jpg",".jpeg",".webp",".bmp",".gif",".tif",".tiff",".svg"}
 st.set_page_config(page_title="Image Flagger", layout="wide")
 
-# ─── minimal CSS: trim top padding; fixed-height pane with scrollable body ───
-st.markdown(
-    """
-    <style>
-    /* tighten page padding a bit (don't nuke the header entirely) */
-    [data-testid="stAppViewContainer"] > .main .block-container {
-        padding-top: 0.5rem; padding-bottom: 0.5rem;
-    }
+# ─── ONLY style the presentation meta window; leave panes/columns alone ──────
+st.markdown("""
+<style>
+.meta-present {
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.02);
+  padding: 8px 10px;
+  box-sizing: border-box;
 
-    /* pane: fixed total height, fills column width naturally */
-    .pane {
-        height: var(--pane-h);
-        display: flex;
-        flex-direction: column;
-        border: 1px solid rgba(0,0,0,.08);
-        border-radius: 10px;
-        padding: 10px 12px;
-        box-sizing: border-box;
-        background: white;
-        margin: 0; /* no extra outer gap */
-    }
-    .pane-header {
-        font-weight: 700;
-        font-size: 1.0rem;
-        line-height: 1.2;
-        margin: 0 0 8px 0;
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+  /* Fixed visual window size (height set via sidebar) */
+  min-height: var(--meta-min-h);
+  max-height: var(--meta-min-h);
+  overflow: auto;          /* scroll inside if text is long */
 
-    /* metadata block (presentation-style) */
-    .meta {
-        border: 1px solid rgba(0,0,0,.06);
-        border-radius: 8px;
-        padding: 8px 10px;
-        background: rgba(0,0,0,0.02);
-        margin-bottom: 8px;
-    }
-    .meta .k { font-weight: 600; }
+  /* keep it visually tight against neighbors */
+  margin: 0 0 10px 0;
+}
+.meta-present p { margin: 0.1rem 0; }
+.meta-present .k { font-weight: 600; }
 
-    /* scrollable body (image + papers) */
-    .pane-body {
-        flex: 1 1 auto;
-        min-height: 0;           /* required for flex overflow */
-        overflow: auto;          /* scroll inside, shape stays fixed */
-        padding-right: 4px;
-    }
-    .pane-body img { max-width: 100%; height: auto; }
+/* keep long links from stretching layout elsewhere */
+.stMarkdown a { word-break: break-word; overflow-wrap: anywhere; }
+</style>
+""", unsafe_allow_html=True)
 
-    /* footer: comment + buttons + nav reserved in fixed space */
-    .pane-footer {
-        flex: 0 0 var(--footer-h);
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-top: 8px;
-    }
-    .pane-footer .stButton > button { width: 100%; }
-
-    /* keep links from stretching layout */
-    .stMarkdown a { word-break: break-word; overflow-wrap: anywhere; }
-
-    /* generally compact markdown spacing */
-    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown p { margin: 0.1rem 0; }
-    .stMarkdown ul { margin: 0.15rem 0; }
-    .stMarkdown li { margin: 0.05rem 0; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# ─── sidebar controls: choose a large, fixed height ──────────────────────────
 with st.sidebar:
     AUTO_NEXT = st.checkbox("Auto-advance after marking", value=True)
     DEBUG     = st.checkbox("Debug resolver", value=False)
-    PANE_HEIGHT_PX  = st.number_input("Pane height (px)", min_value=600, max_value=2200, value=900, step=20)
-    FOOTER_HEIGHT_PX = st.number_input("Footer reserve (px)", min_value=140, max_value=360, value=210, step=10,
-                                       help="Space for comment + buttons + navigation")
+    META_MIN_HEIGHT_PX = st.number_input(
+        "Presentation meta window height (px)",
+        min_value=160, max_value=1000, value=260, step=10,
+        help="Fixed-size block for Description/Demographics/N/Age/Tags/Papers:"
+    )
 
-# inject CSS variables for pane sizing
-st.markdown(
-    f"""
-    <style>
-    :root {{
-        --pane-h: {int(PANE_HEIGHT_PX)}px;
-        --footer-h: {int(FOOTER_HEIGHT_PX)}px;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# expose the CSS var for the meta window height
+st.markdown(f"<style>:root{{--meta-min-h:{int(META_MIN_HEIGHT_PX)}px;}}</style>", unsafe_allow_html=True)
 
 # ─── helpers: normalization + indexing ────────────────────────────────────────
 def normkey(s: str) -> str:
@@ -119,13 +66,19 @@ def show_or_none(val: str) -> str:
     s = unicodedata.normalize("NFKC", str(val)).strip()
     return s if s else "None"
 
+def is_url(s: str) -> bool:
+    s = str(s).strip().lower()
+    return s.startswith(("http://","https://","file://"))
+
 def show_img(src):
+    """Use a backward-compatible image call across Streamlit versions."""
     try:
         st.image(str(src), use_container_width=True)
     except TypeError:
         st.image(str(src))
 
 def bordered_container():
+    """Compatible container with/without border kwarg across versions."""
     try:
         return st.container(border=True)
     except TypeError:
@@ -146,40 +99,55 @@ STEM_INDEX, NAME_INDEX = build_indexes(IMG_DIR)
 
 @st.cache_data(show_spinner=False)
 def meta(csv_path: Path):
+    # Read as strings; normalize column names to lowercase
     df = pd.read_csv(csv_path, dtype=str).fillna("")
     df.columns = [c.strip().lower() for c in df.columns]
+
     if "map" not in df.columns:
         raise ValueError("metadata.csv must contain a 'map' column")
-    for col in ["description","demographics","n","age","tags","paper1","paper2"]:
+
+    # Ensure required fields exist
+    required = ["description","demographics","n","age","tags","paper1","paper2"]
+    for col in required:
         if col not in df.columns:
             df[col] = ""
+
+    # Back-compat: a single 'paper' column can act as paper1 if paper1 empty
     if "paper" in df.columns:
         take = df["paper1"].str.strip() == ""
         df.loc[take, "paper1"] = df.loc[take, "paper"].fillna("")
+
     return df
 
 def resolve(raw: str):
+    """Return (src, diag). src is str|Path|None."""
     diag = {"input": raw, "tried": []}
     if raw is None: return None, diag
     s = unicodedata.normalize("NFKC", str(raw)).strip().strip('"').strip("'")
     if not s: return None, diag
+    # URL
     if s.startswith(("http://","https://","file://")):
         diag["result"] = "url"; return s, diag
     cand = Path(s)
+    # absolute
     if cand.is_absolute() and cand.is_file():
         diag["result"] = "abs"; return cand, diag
     diag["tried"].append(f"abs:{cand}")
+    # rel CWD
     if cand.is_file():
         diag["result"] = "rel_cwd"; return cand.resolve(), diag
     diag["tried"].append(f"rel_cwd:{cand}")
+    # rel ROOT
     q = (ROOT / s)
     if q.is_file():
         diag["result"] = "rel_root"; return q.resolve(), diag
     diag["tried"].append(f"rel_root:{q}")
+    # rel IMG_DIR
     q = (IMG_DIR / s)
     if q.is_file():
         diag["result"] = "rel_imgdir"; return q.resolve(), diag
     diag["tried"].append(f"rel_imgdir:{q}")
+    # add ext
     if cand.suffix == "":
         for ext in EXTS:
             for base in (IMG_DIR, ROOT):
@@ -187,16 +155,18 @@ def resolve(raw: str):
                 if q.is_file():
                     diag["result"] = f"added_ext:{ext}"; return q.resolve(), diag
                 diag["tried"].append(f"added_ext:{q}")
+    # index lookup
     key = normkey(cand.stem if cand.suffix else s)
     if key in STEM_INDEX:
         diag["result"] = "stem_index"; diag["key"] = key; return STEM_INDEX[key], diag
     if key in NAME_INDEX:
         diag["result"] = "name_index"; diag["key"] = key; return NAME_INDEX[key], diag
+    # fuzzy
     keys = list(STEM_INDEX.keys() | NAME_INDEX.keys())
     diag["suggestions"] = get_close_matches(key, keys, n=5, cutoff=0.6)
     return None, diag
 
-# ─── link parsing (Python 3.13-safe) ─────────────────────────────────────────
+# ─── robust link parsing for papers (Python 3.13-safe) ────────────────────────
 _URL_RE    = re.compile(r'(https?://[^\s\]\)>,;]+)', re.I)
 _DOI_RE    = re.compile(r'(?:doi:\s*|DOI:\s*)?(10\.\d{4,9}/[^\s\]\)>,;]+)')
 _ARXIV_RE  = re.compile(r'arxiv:\s*([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)', re.I)
@@ -211,27 +181,42 @@ def _dedup(seq):
     return out
 
 def parse_links_field(s: str) -> list[str]:
-    if not s: return []
+    """Extract links from free text (URLs, DOIs, arXiv, PubMed/PMC)."""
+    if not s:
+        return []
     text = str(s)
+
     links = []
+    # 1) Explicit URLs
     for m in _URL_RE.findall(text):
         links.append(m.rstrip(').,;]'))
+
+    # 2) DOIs
     for m in _DOI_RE.findall(text):
         links.append(f"https://doi.org/{m}")
+
+    # 3) arXiv IDs
     for m in _ARXIV_RE.findall(text):
         links.append(f"https://arxiv.org/abs/{m}")
+
+    # 4) PubMed / PMC IDs
     for m in _PMID_RE.findall(text):
         links.append(f"https://pubmed.ncbi.nlm.nih.gov/{m}/")
     for m in _PMCID_RE.findall(text):
         links.append(f"https://www.ncbi.nlm.nih.gov/pmc/articles/{m}/")
+
     return _dedup(links)
 
 def links_markdown_list(*fields: str, label_style: str = "url", numbered: bool = False) -> str:
+    """Return a Markdown list with one link per line."""
     all_links = []
     for f in fields:
         all_links.extend(parse_links_field(f))
     all_links = _dedup(all_links)
-    if not all_links: return "None"
+
+    if not all_links:
+        return "None"
+
     lines = []
     if numbered:
         for k, u in enumerate(all_links, 1):
@@ -246,24 +231,27 @@ def links_markdown_list(*fields: str, label_style: str = "url", numbered: bool =
 # ─── load data ────────────────────────────────────────────────────────────────
 df_meta = meta(CSV_FILE)
 N = len(df_meta)
-if N == 0: st.stop()
+if N == 0:
+    st.stop()
 
+# guard against duplicate 'map' values
 dup = df_meta["map"][df_meta["map"].duplicated()].tolist()
 if dup:
     st.warning(f"Duplicate 'map' values found; using first occurrence: {sorted(set(dup))[:5]}{'...' if len(dup)>5 else ''}")
 
+# fast lookups
 idx_by_map = {}
 for i, m in enumerate(df_meta["map"]):
     if m not in idx_by_map:
-        idx_by_map[m] = i
+        idx_by_map[m] = i  # keep first
 
-# state
+# ─── state: indices & flags persist across reruns ─────────────────────────────
 st.session_state.setdefault("paneA_idx", 0)
 st.session_state.setdefault("paneB_idx", 1 if N > 1 else 0)
-st.session_state.setdefault("flags", {})
-st.session_state.setdefault("notes", {})
+st.session_state.setdefault("flags", {})   # map -> "OK"/"Bad"
+st.session_state.setdefault("notes", {})   # map -> "comment" (optional text)
 
-# actions
+# ─── actions (callbacks) ─────────────────────────────────────────────────────
 def set_idx(idx_key: str, new_idx: int):
     st.session_state[idx_key] = int(new_idx) % N
 
@@ -276,77 +264,87 @@ def clear_flag(map_id: str):
     st.session_state["flags"].pop(map_id, None)
 
 def save_comment(map_id: str, key: str):
+    """Copy the current text_input value into the notes dict."""
     st.session_state["notes"][map_id] = st.session_state.get(key, "").strip()
 
-# ─── pane renderer (fixed height, clean presentation) ────────────────────────
+# ─── pane renderer ────────────────────────────────────────────────────────────
 def render_pane(pane_name: str, idx_key: str):
     i = int(st.session_state[idx_key]) % N
     row = df_meta.iloc[i]
     map_id = row["map"]
     src, diag = resolve(map_id)
 
-    st.markdown("<div class='pane'>", unsafe_allow_html=True)
-    st.markdown(f"<div class='pane-header'>{pane_name}: <strong>{map_id}</strong></div>", unsafe_allow_html=True)
+    st.markdown(f"### {pane_name}")
+    st.write(f"**{map_id}**")
 
-    # ——— presentation-style meta block ———
+    # --- presentation-style meta window (fixed-size) ---
     desc = show_or_none(row.get("description", ""))
     demo = show_or_none(row.get("demographics", ""))
     n    = show_or_none(row.get("n", ""))
     age  = show_or_none(row.get("age", ""))
     tags = show_or_none(row.get("tags", ""))
 
-    st.markdown("<div class='meta'>", unsafe_allow_html=True)
-    st.markdown(f"<span class='k'>Description:</span> {desc}", unsafe_allow_html=True)
-    st.markdown(f"<span class='k'>Demographics:</span> {demo}", unsafe_allow_html=True)
-    st.markdown(f"<span class='k'>N:</span> {n}", unsafe_allow_html=True)
-    st.markdown(f"<span class='k'>Age:</span> {age}", unsafe_allow_html=True)
-    st.markdown(f"<span class='k'>Tags:</span> {tags}", unsafe_allow_html=True)
-    st.markdown("<span class='k'>Papers:</span>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='meta-present'>"
+        f"<p><span class='k'>Description:</span> {desc}</p>"
+        f"<p><span class='k'>Demographics:</span> {demo}</p>"
+        f"<p><span class='k'>N:</span> {n}</p>"
+        f"<p><span class='k'>Age:</span> {age}</p>"
+        f"<p><span class='k'>Tags:</span> {tags}</p>"
+        f"<p><span class='k'>Papers:</span></p>"
+        "</div>",
+        unsafe_allow_html=True
+    )
 
-    # ——— scrollable body: image + papers list ———
-    st.markdown("<div class='pane-body'>", unsafe_allow_html=True)
-    if src is None:
+    # Image (unchanged)
+    src_path, diag_info = resolve(map_id)
+    if src_path is None:
         st.error("image not found")
         if DEBUG:
             with st.expander("Why not found? (debug)"):
-                st.json(diag)
+                st.json(diag_info)
     else:
-        show_img(src)
+        show_img(src_path)
 
-    papers_md = links_markdown_list(row.get("paper1",""), row.get("paper2",""),
-                                    label_style="url", numbered=True)
+    # Clickable papers list (kept OUTSIDE the fixed meta window to avoid resizing)
+    papers_md = links_markdown_list(
+        row.get("paper1",""), row.get("paper2",""),
+        label_style="url",  # or "domain"
+        numbered=True
+    )
+    st.markdown("**Papers (links):**")
     st.markdown(papers_md)
-    st.markdown("</div>", unsafe_allow_html=True)
 
-    # ——— fixed footer: comment + buttons + nav ———
-    st.markdown("<div class='pane-footer'>", unsafe_allow_html=True)
+    st.caption(f"Current flag: {st.session_state['flags'].get(map_id, '—')}")
 
-    ckey = f"{pane_name}_comment_{map_id}"
-    st.text_input("Comment (optional)",
-                  value=st.session_state["notes"].get(map_id, ""),
-                  key=ckey,
-                  on_change=save_comment,
-                  args=(map_id, ckey))
-
+    # buttons (stable keys per pane)
     b1, b2, b3, _sp = st.columns([2, 2, 2, 6])
+
     def wide_button(label, **kwargs):
         try:
             return st.button(label, use_container_width=True, **kwargs)
         except TypeError:
             return st.button(label, **kwargs)
+
     with b1:
-        wide_button("✅ OK",  key=f"{pane_name}_ok",
+        wide_button("✅ OK",
+                    key=f"{pane_name}_ok",
                     on_click=mark_and_maybe_advance,
                     args=(idx_key, i, map_id, "OK", AUTO_NEXT))
     with b2:
-        wide_button("❌ Bad", key=f"{pane_name}_bad",
+        wide_button("❌ Bad",
+                    key=f"{pane_name}_bad",
                     on_click=mark_and_maybe_advance,
                     args=(idx_key, i, map_id, "Bad", AUTO_NEXT))
     with b3:
-        wide_button("🧹 Clear", key=f"{pane_name}_clear",
-                    on_click=clear_flag, args=(map_id,))
+        wide_button("🧹 Clear",
+                    key=f"{pane_name}_clear",
+                    on_click=clear_flag,
+                    args=(map_id,))
 
+    st.divider()
+
+    # navigation
     c1, c2, c3 = st.columns([1,1,3])
     with c1:
         st.button("⬅ Prev", key=f"{pane_name}_prev",
@@ -362,29 +360,29 @@ def render_pane(pane_name: str, idx_key: str):
         st.button("Go", key=f"{pane_name}_jump_go",
                   on_click=set_idx, args=(idx_key, idx_by_map.get(jump_map, i)))
 
-    st.markdown("</div>", unsafe_allow_html=True)  # footer
-    st.markdown("</div>", unsafe_allow_html=True)  # pane
-
-# ─── layout: two equal columns; panes take full column width ─────────────────
+# ─── layout: two independent panes ────────────────────────────────────────────
 colA, colB = st.columns(2, gap="large")
 with colA:
     render_pane("Window A", "paneA_idx")
 with colB:
     render_pane("Window B", "paneB_idx")
 
-# ─── annotations view/export ─────────────────────────────────────────────────
-st.markdown("### Your annotations")
+# ─── annotations view/export (by map) ─────────────────────────────────────────
+st.subheader("Your annotations")
+
 annot_series   = pd.Series(st.session_state["flags"], name="flag")
 comment_series = pd.Series(st.session_state["notes"], name="comment")
 
 out = df_meta.merge(annot_series, how="left", left_on="map", right_index=True)
 out = out.merge(comment_series, how="left", left_on="map", right_index=True)
 
+# Include rows that have either a flag or a non-empty comment
 mask = out["flag"].notna() | out["comment"].fillna("").astype(str).str.len().gt(0)
 flagged = out[mask].reset_index(drop=True)
 
 st.progress(len(flagged) / max(N,1))
 st.data_editor(flagged, num_rows="dynamic", use_container_width=True)
+
 st.download_button(
     "📥 Download CSV",
     flagged.to_csv(index=False).encode(),
