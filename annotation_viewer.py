@@ -1,4 +1,4 @@
-# app.py — two-pane image flagger (comments + equal-height panes)
+# app.py — two-pane image flagger (fixed-shape panes, compact top spacing, comments)
 # ─────────────────────────────────────────────────────────────────────────────
 import pandas as pd, streamlit as st
 from pathlib import Path
@@ -19,13 +19,45 @@ CSV_FILE = (ROOT / "metadata_v2.csv").resolve()
 EXTS = {".png",".jpg",".jpeg",".webp",".bmp",".gif",".tif",".tiff",".svg"}
 st.set_page_config(page_title="Image Flagger", layout="wide")
 
-# Optional small CSS to prevent weird spacing on columns
+# Compact the top padding/margins to remove extra space above panes
 st.markdown(
     """
     <style>
-    .pane-wrapper { display: block; }
-    /* keep markdown links from blowing up layout */
-    .stMarkdown a { word-break: break-word; overflow-wrap: anywhere; }
+    .block-container { padding-top: 0.5rem; }             /* tighten overall top padding */
+    .stMarkdown h3, h3, .stMarkdown p { margin-top: 0; }  /* remove heading top margins */
+    .pane {
+        height: var(--pane-h);
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgba(0,0,0,.1);
+        border-radius: .5rem;
+        padding: .5rem .75rem .5rem .75rem;
+        box-sizing: border-box;
+        background: var(--background-color);
+    }
+    .pane-header {
+        font-weight: 600;
+        margin-bottom: .25rem;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .pane-body {
+        height: calc(var(--pane-h) - var(--pane-footer-h) - .75rem);
+        overflow: auto;     /* scroll inside, not the whole page */
+        padding-right: .25rem;
+    }
+    .pane-footer {
+        height: var(--pane-footer-h);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: .25rem;
+        margin-top: .25rem;
+    }
+    /* make buttons flush */
+    .pane-footer .stButton>button { width: 100%; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -34,9 +66,22 @@ st.markdown(
 with st.sidebar:
     AUTO_NEXT = st.checkbox("Auto-advance after marking", value=True)
     DEBUG     = st.checkbox("Debug resolver", value=False)
-    PANE_MIN_HEIGHT = st.number_input(
-        "Pane min height (px)", min_value=600, max_value=3000, value=1000, step=50
-    )
+    PANE_HEIGHT_PX = st.number_input("Pane height (px)", min_value=600, max_value=3000, value=900, step=50)
+    FOOTER_HEIGHT_PX = st.number_input("Footer reserve (px)", min_value=120, max_value=400, value=220, step=10,
+                                       help="Space for comment, buttons, and nav. Body becomes scrollable.")
+
+# inject CSS variables for pane sizing
+st.markdown(
+    f"""
+    <style>
+    :root {{
+        --pane-h: {int(PANE_HEIGHT_PX)}px;
+        --pane-footer-h: {int(FOOTER_HEIGHT_PX)}px;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ─── helpers: normalization + indexing ────────────────────────────────────────
 def normkey(s: str) -> str:
@@ -150,9 +195,9 @@ def resolve(raw: str):
 # ─── robust link parsing for papers ───────────────────────────────────────────
 _URL_RE    = re.compile(r'(https?://[^\s\]\)>,;]+)', re.I)
 _DOI_RE    = re.compile(r'(?:doi:\s*|DOI:\s*)?(10\.\d{4,9}/[^\s\]\)>,;]+)')
-_ARXIV_RE  = re.compile(r'arxiv:\s*([0-9]{4}\.[0-9]{4,5}(?:v\d+)?)', re.I)
-_PMID_RE   = re.compile(r'pmid:\s*(\d+)', re.I)
-_PMCID_RE  = re.compile(r'pmcid:\s*(PMC\d+)', re.I)
+_ARXIV_RE  = re.compile(r'arxiv:\s*([0-9]{4}\.[0-9]{4,5}(?:v\\d+)?)', re.I)
+_PMID_RE   = re.compile(r'pmid:\s*(\\d+)', re.I)
+_PMCID_RE  = re.compile(r'pmcid:\s*(PMC\\d+)', re.I)
 
 def _dedup(seq):
     seen, out = set(), []
@@ -252,19 +297,19 @@ def save_comment(map_id: str, key: str):
 
 # ─── pane renderer ────────────────────────────────────────────────────────────
 def render_pane(pane_name: str, idx_key: str):
-    # keep both panes the same overall shape/height
-    st.markdown(
-        f"<div class='pane-wrapper' style='min-height:{int(PANE_MIN_HEIGHT)}px'>",
-        unsafe_allow_html=True
-    )
-
     i = int(st.session_state[idx_key]) % N
     row = df_meta.iloc[i]
     map_id = row["map"]
     src, diag = resolve(map_id)
 
-    st.markdown(f"### {pane_name}")
-    st.write(f"**{map_id}**")
+    # pane container with fixed total height; body scrolls if needed
+    st.markdown(f"<div class='pane'>", unsafe_allow_html=True)
+
+    # HEADER (compact)
+    st.markdown(f"<div class='pane-header'>{pane_name}: <strong>{map_id}</strong></div>", unsafe_allow_html=True)
+
+    # BODY (scrollable area)
+    st.markdown("<div class='pane-body'>", unsafe_allow_html=True)
 
     # Metadata block (always present; shows 'None' for empties)
     desc = show_or_none(row.get("description", ""))
@@ -299,6 +344,11 @@ def render_pane(pane_name: str, idx_key: str):
         show_img(src)
 
     st.caption(f"Current flag: {st.session_state['flags'].get(map_id, '—')}")
+
+    st.markdown("</div>", unsafe_allow_html=True)  # end pane-body
+
+    # FOOTER (fixed height area: comment + buttons + nav)
+    st.markdown("<div class='pane-footer'>", unsafe_allow_html=True)
 
     # Optional per-map comment input
     ckey = f"{pane_name}_comment_{map_id}"
@@ -336,8 +386,6 @@ def render_pane(pane_name: str, idx_key: str):
                     on_click=clear_flag,
                     args=(map_id,))
 
-    st.divider()
-
     # navigation
     c1, c2, c3 = st.columns([1,1,3])
     with c1:
@@ -354,8 +402,8 @@ def render_pane(pane_name: str, idx_key: str):
         st.button("Go", key=f"{pane_name}_jump_go",
                   on_click=set_idx, args=(idx_key, idx_by_map.get(jump_map, i)))
 
-    # end fixed-height wrapper
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)  # end pane-footer
+    st.markdown("</div>", unsafe_allow_html=True)  # end pane
 
 # ─── layout: two independent panes ────────────────────────────────────────────
 colA, colB = st.columns(2, gap="large")
@@ -365,7 +413,7 @@ with colB:
     render_pane("Window B", "paneB_idx")
 
 # ─── annotations view/export (by map) ─────────────────────────────────────────
-st.subheader("Your annotations")
+st.markdown("### Your annotations")
 
 annot_series   = pd.Series(st.session_state["flags"], name="flag")
 comment_series = pd.Series(st.session_state["notes"], name="comment")
