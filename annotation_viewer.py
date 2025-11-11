@@ -1,4 +1,4 @@
-# app.py — two-pane image flagger (fixed-size presentation meta window + comments)
+# app.py — two-pane image flagger (fixed-size presentation meta window + optional comments)
 # ─────────────────────────────────────────────────────────────────────────────
 import pandas as pd, streamlit as st
 from pathlib import Path
@@ -34,7 +34,6 @@ st.markdown("""
   max-height: var(--meta-min-h);
   overflow: auto;          /* scroll inside if text is long */
 
-  /* keep it visually tight against neighbors */
   margin: 0 0 10px 0;
 }
 .meta-present p { margin: 0.1rem 0; }
@@ -296,28 +295,37 @@ def render_pane(pane_name: str, idx_key: str):
         unsafe_allow_html=True
     )
 
-    # Image (unchanged)
-    src_path, diag_info = resolve(map_id)
-    if src_path is None:
+    # Image
+    if src is None:
         st.error("image not found")
         if DEBUG:
             with st.expander("Why not found? (debug)"):
-                st.json(diag_info)
+                st.json(diag)
     else:
-        show_img(src_path)
+        show_img(src)
 
-    # Clickable papers list (kept OUTSIDE the fixed meta window to avoid resizing)
+    # Clickable papers list (kept outside the fixed meta window)
     papers_md = links_markdown_list(
         row.get("paper1",""), row.get("paper2",""),
-        label_style="url",  # or "domain"
+        label_style="url",
         numbered=True
     )
     st.markdown("**Papers (links):**")
     st.markdown(papers_md)
 
+    # Optional per-map comment input (RESTORED)
+    ckey = f"{pane_name}_comment_{map_id}"
+    st.text_input(
+        "Comment (optional)",
+        value=st.session_state["notes"].get(map_id, ""),
+        key=ckey,
+        on_change=save_comment,
+        args=(map_id, ckey)
+    )
+
     st.caption(f"Current flag: {st.session_state['flags'].get(map_id, '—')}")
 
-    # buttons (stable keys per pane)
+    # buttons
     b1, b2, b3, _sp = st.columns([2, 2, 2, 6])
 
     def wide_button(label, **kwargs):
