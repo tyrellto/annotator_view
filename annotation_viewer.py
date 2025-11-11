@@ -1,4 +1,4 @@
-# app.py — two-pane image flagger (with richer metadata + robust paper links)
+# app.py — two-pane image flagger (comments + equal-height panes)
 # ─────────────────────────────────────────────────────────────────────────────
 import pandas as pd, streamlit as st
 from pathlib import Path
@@ -19,9 +19,24 @@ CSV_FILE = (ROOT / "metadata_v2.csv").resolve()
 EXTS = {".png",".jpg",".jpeg",".webp",".bmp",".gif",".tif",".tiff",".svg"}
 st.set_page_config(page_title="Image Flagger", layout="wide")
 
+# Optional small CSS to prevent weird spacing on columns
+st.markdown(
+    """
+    <style>
+    .pane-wrapper { display: block; }
+    /* keep markdown links from blowing up layout */
+    .stMarkdown a { word-break: break-word; overflow-wrap: anywhere; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 with st.sidebar:
     AUTO_NEXT = st.checkbox("Auto-advance after marking", value=True)
     DEBUG     = st.checkbox("Debug resolver", value=False)
+    PANE_MIN_HEIGHT = st.number_input(
+        "Pane min height (px)", min_value=600, max_value=3000, value=1000, step=50
+    )
 
 # ─── helpers: normalization + indexing ────────────────────────────────────────
 def normkey(s: str) -> str:
@@ -175,10 +190,7 @@ def parse_links_field(s: str) -> list[str]:
     return _dedup(links)
 
 def links_markdown_list(*fields: str, label_style: str = "url", numbered: bool = False) -> str:
-    """Return a Markdown list with one link per line.
-       label_style: "url" (full URL text) or "domain" (e.g., doi.org).
-       numbered: True for 1., 2., 3.; False for bullets (-).
-    """
+    """Return a Markdown list with one link per line."""
     all_links = []
     for f in fields:
         all_links.extend(parse_links_field(f))
@@ -240,6 +252,12 @@ def save_comment(map_id: str, key: str):
 
 # ─── pane renderer ────────────────────────────────────────────────────────────
 def render_pane(pane_name: str, idx_key: str):
+    # keep both panes the same overall shape/height
+    st.markdown(
+        f"<div class='pane-wrapper' style='min-height:{int(PANE_MIN_HEIGHT)}px'>",
+        unsafe_allow_html=True
+    )
+
     i = int(st.session_state[idx_key]) % N
     row = df_meta.iloc[i]
     map_id = row["map"]
@@ -335,6 +353,9 @@ def render_pane(pane_name: str, idx_key: str):
                                 key=f"{pane_name}_jump_select")
         st.button("Go", key=f"{pane_name}_jump_go",
                   on_click=set_idx, args=(idx_key, idx_by_map.get(jump_map, i)))
+
+    # end fixed-height wrapper
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ─── layout: two independent panes ────────────────────────────────────────────
 colA, colB = st.columns(2, gap="large")
